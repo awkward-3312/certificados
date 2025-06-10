@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supa.auth.signInWithPassword({
         email,
         password
       });
@@ -35,6 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
         errorEl.textContent = 'Credenciales inválidas.';
         return;
       }
+
+      if (!isAuthorized(data.user.email)) {
+        await supa.auth.signOut();
+        errorEl.textContent = 'Acceso no autorizado.';
+        return;
+      }
+
+      window.location.href = 'index.html';
+    } catch (err) {
+      loaderEl.classList.add('hidden');
+      console.error(err);
+      errorEl.textContent = 'Ocurrió un error. Intenta nuevamente.';
+    }
+  });
+});
 
       if (!isAuthorized(data.user.email)) {
         await supabase.auth.signOut();
