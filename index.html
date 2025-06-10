@@ -3,130 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Certificados</title>
+  <title>Certificados AR</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-bHLRN2J1L/s3rSoTTDo1B4ezgmO6ijLJrVN6aCMGN28AL/fOHnqd7qV3CyMfCVxYvBy06SnVAk0bsFWoV+nzRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="src/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="src/supabaseClient.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="dashboard.js" defer></script>
 </head>
-<body class="h-screen flex overflow-hidden bg-gray-100">
+<body class="bg-gradient-to-r from-pink-50 to-blue-50 min-h-screen flex font-[Segoe UI]">
   <!-- Sidebar -->
-  <aside id="sidebar" class="bg-blue-700 text-white w-64 space-y-6 py-6 px-2 absolute inset-y-0 left-0 transform -translate-x-full transition duration-200 ease-in-out md:relative md:translate-x-0">
-    <div class="flex items-center justify-between px-4">
-      <span class="text-2xl font-semibold">Certificados</span>
-      <button id="closeSidebar" class="md:hidden focus:outline-none"><i class="fas fa-times"></i></button>
-    </div>
-    <nav class="mt-8">
-      <a href="#" data-tab="dashboard" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
-        <i class="fas fa-table mr-3"></i><span>Dashboard</span>
-      </a>
-      <a href="#" data-tab="labs" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
-        <i class="fas fa-flask mr-3"></i><span>Laboratorios</span>
-      </a>
-      <a href="#" data-tab="vencer" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
-        <i class="fas fa-clock mr-3"></i><span>Por Vencer</span>
-      </a>
-      <a href="#" data-tab="clv" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
-        <i class="fas fa-certificate mr-3"></i><span>CLV</span>
-      </a>
-      <a href="#" data-tab="cpp" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
-        <i class="fas fa-file-alt mr-3"></i><span>CPP</span>
-      </a>
-      <a href="#" data-tab="cbpm" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
-        <i class="fas fa-prescription-bottle-alt mr-3"></i><span>CBPM</span>
-      </a>
+  <aside id="sidebar" class="w-64 bg-gradient-to-b from-blue-700 to-blue-800 text-white flex-shrink-0 flex flex-col py-6 px-4 shadow-xl">
+    <div class="text-3xl font-bold mb-8">Certificados AR</div>
+    <nav class="flex flex-col gap-4">
+      <a href="#" data-tab="dashboard" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition"><i class="fas fa-table"></i><span>Dashboard</span></a>
+      <a href="#" data-tab="labs" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition"><i class="fas fa-flask"></i><span>Laboratorios</span></a>
+      <a href="#" data-tab="vencer" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition"><i class="fas fa-clock"></i><span>Por Vencer</span></a>
+      <a href="#" data-tab="clv" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition"><i class="fas fa-certificate"></i><span>CLV</span></a>
+      <a href="#" data-tab="cpp" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition"><i class="fas fa-file-alt"></i><span>CPP</span></a>
+      <a href="#" data-tab="cbpm" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition"><i class="fas fa-prescription-bottle-alt"></i><span>CBPM</span></a>
     </nav>
+    <button id="logoutBtn" class="mt-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded mt-6">Cerrar sesión</button>
   </aside>
 
-  <!-- Main -->
-  <div class="flex-1 flex flex-col">
-    <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <button id="openSidebar" class="md:hidden"><i class="fas fa-bars"></i></button>
-        <h1 class="text-xl font-semibold">Repositorio de Certificados</h1>
+  <!-- Main Content -->
+  <main class="flex-1 p-6 overflow-y-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">Repositorio de Certificados</h1>
+      <button id="exportBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"><i class="fas fa-file-excel mr-2"></i>Exportar Excel</button>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <section id="tab-dashboard">
+      <!-- Estadísticas -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="statCards"></div>
+
+      <!-- Filtros -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <input id="search" type="text" placeholder="Buscar..." class="border px-3 py-2 rounded w-full" />
+        <select id="filterPais" class="border px-3 py-2 rounded w-full"></select>
+        <select id="filterTipoProducto" class="border px-3 py-2 rounded w-full"></select>
+        <select id="filterTipoCertificado" class="border px-3 py-2 rounded w-full"></select>
       </div>
-      <button id="logoutBtn" class="bg-blue-800 px-3 py-1 rounded">Cerrar sesión</button>
-    </header>
 
-    <main class="flex-1 overflow-y-auto p-4 space-y-8">
-      <!-- Dashboard Tab -->
-      <section id="tab-dashboard">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" id="statCards"></div>
-        <div class="flex flex-wrap gap-4 mb-4">
-          <input id="search" type="text" placeholder="Buscar..." aria-label="Buscar certificados" class="border px-2 py-1 rounded w-full sm:w-auto" />
-          <select id="filterPais" aria-label="Filtrar por país" class="border px-2 py-1 rounded">
-            <option value="">Todos los países</option>
-          </select>
-          <select id="filterTipoProducto" aria-label="Filtrar por producto" class="border px-2 py-1 rounded">
-            <option value="">Todos los productos</option>
-          </select>
-          <select id="filterTipoCertificado" aria-label="Filtrar por certificado" class="border px-2 py-1 rounded">
-            <option value="">Todos los certificados</option>
-          </select>
-          <button id="exportBtn" class="ml-auto bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition">Exportar Excel</button>
-        </div>
+      <!-- Tabla -->
+      <div id="loading" class="text-center text-sm text-gray-500 mb-2">Cargando...</div>
+      <div class="overflow-auto border rounded-lg">
+        <table class="min-w-full text-sm divide-y divide-gray-200">
+          <thead class="bg-gray-100 text-left text-gray-700">
+            <tr>
+              <th class="px-3 py-2">Laboratorio</th>
+              <th class="px-3 py-2">Dirección</th>
+              <th class="px-3 py-2">País</th>
+              <th class="px-3 py-2">Tipo de Producto</th>
+              <th class="px-3 py-2">Forma Farmacéutica</th>
+              <th class="px-3 py-2">Tipo Forma (Cert)</th>
+              <th class="px-3 py-2">Tipo Certificado</th>
+              <th class="px-3 py-2">Emisión</th>
+              <th class="px-3 py-2">Vencimiento</th>
+              <th class="px-3 py-2">PDF</th>
+              <th class="px-3 py-2">Estado</th>
+              <th class="px-3 py-2">Fecha Agregado</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
 
-        <div id="loading" class="text-center" aria-live="polite">Cargando...</div>
+      <!-- Paginación -->
+      <div class="mt-4 flex justify-center items-center gap-4 text-sm">
+        <button id="prevPage" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Anterior</button>
+        <span id="pageInfo"></span>
+        <button id="nextPage" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Siguiente</button>
+      </div>
+    </section>
 
-        <div class="overflow-x-auto mt-4">
-          <table class="table-auto w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-200 sticky top-0 text-gray-700">
-              <tr>
-                <th class="px-3 py-2 w-32 font-semibold">Laboratorio</th>
-                <th class="px-3 py-2 w-52 break-words">Dirección</th>
-                <th class="px-3 py-2 w-24 font-semibold">País</th>
-                <th class="px-3 py-2 w-40 break-words">Tipo de Producto</th>
-                <th class="px-3 py-2 w-40 break-words">Tipo de Forma Farmacéutica</th>
-                <th class="px-3 py-2 w-36 break-words">Tipo Forma (Cert)</th>
-                <th class="px-3 py-2 w-36 break-words">Tipo de Certificado</th>
-                <th class="px-3 py-2 w-32 font-semibold">Fecha de Emisión</th>
-                <th class="px-3 py-2 w-32 font-semibold">Fecha de Vencimiento</th>
-                <th class="px-3 py-2 w-20 truncate">Archivo PDF</th>
-                <th class="px-3 py-2 w-24 font-semibold">Estado</th>
-                <th class="px-3 py-2 w-36 font-semibold">Fecha Actualizado</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody" class="divide-y divide-gray-100"></tbody>
-          </table>
-        </div>
+    <!-- Otras Secciones -->
+    <section id="tab-labs" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Laboratorios</h2>
+      <ul id="labList" class="list-disc pl-6 space-y-1 text-sm"></ul>
+    </section>
 
-        <div class="mt-4 flex justify-center" id="pagination">
-          <button id="prevPage" class="px-2">Anterior</button>
-          <span id="pageInfo" class="px-2"></span>
-          <button id="nextPage" class="px-2">Siguiente</button>
-        </div>
-      </section>
+    <section id="tab-vencer" class="hidden">
+      <h2 class="text-xl font-semibold mb-4">Certificados por Vencer</h2>
+      <div id="vencerLoading" class="text-center text-sm text-gray-500 mb-2">Cargando...</div>
+      <div class="overflow-auto border rounded-lg">
+        <table class="min-w-full text-sm divide-y divide-gray-200">
+          <thead class="bg-gray-100 text-left text-gray-700">
+            <tr>
+              <th class="px-3 py-2">Laboratorio</th>
+              <th class="px-3 py-2">País</th>
+              <th class="px-3 py-2">Tipo de Certificado</th>
+              <th class="px-3 py-2">Vence</th>
+              <th class="px-3 py-2">PDF</th>
+            </tr>
+          </thead>
+          <tbody id="vencerBody" class="divide-y divide-gray-100"></tbody>
+        </table>
+      </div>
+    </section>
 
-      <section id="tab-labs" class="hidden">
-        <ul id="labList" class="list-disc pl-5 space-y-2"></ul>
-      </section>
-
-      <section id="tab-vencer" class="hidden">
-        <div id="vencerLoading" class="text-center" aria-live="polite"></div>
-        <div class="overflow-x-auto mt-4">
-          <table class="table-auto w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-200 sticky top-0 text-gray-700">
-              <tr>
-                <th class="px-3 py-2 w-32 font-semibold">Laboratorio</th>
-                <th class="px-3 py-2 w-24 font-semibold">País</th>
-                <th class="px-3 py-2 w-36 break-words">Tipo de Certificado</th>
-                <th class="px-3 py-2 w-32 font-semibold">Vence</th>
-                <th class="px-3 py-2 w-20 truncate">Archivo PDF</th>
-              </tr>
-            </thead>
-            <tbody id="vencerBody" class="divide-y divide-gray-100"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section id="tab-clv" class="hidden"></section>
-      <section id="tab-cpp" class="hidden"></section>
-      <section id="tab-cbpm" class="hidden"></section>
-
-    </main>
-  </div>
+    <section id="tab-clv" class="hidden"></section>
+    <section id="tab-cpp" class="hidden"></section>
+    <section id="tab-cbpm" class="hidden"></section>
+  </main>
 </body>
 </html>
