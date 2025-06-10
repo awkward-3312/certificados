@@ -5,10 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Certificados</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="/src/styles.css" />
+  <link rel="stylesheet" href="src/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="src/supabaseClient.js"></script>
+  <script src="dashboard.js" defer></script>
 </head>
 <body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.js"></script>
+  <div class="min-h-screen bg-gray-100">
+    <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+      <h1 class="text-xl font-semibold">Repositorio de Certificados</h1>
+      <button id="logoutBtn" class="bg-blue-800 px-3 py-1 rounded">Cerrar sesión</button>
+    </header>
+    <main class="p-4 overflow-x-auto">
+      <div class="flex flex-wrap gap-4 mb-4">
+        <input id="search" type="text" placeholder="Buscar..." class="border px-2 py-1 rounded w-full sm:w-auto" />
+        <select id="filterPais" class="border px-2 py-1 rounded">
+          <option value="">Todos los países</option>
+        </select>
+        <select id="filterTipoProducto" class="border px-2 py-1 rounded">
+          <option value="">Todos los productos</option>
+        </select>
+        <select id="filterTipoCertificado" class="border px-2 py-1 rounded">
+          <option value="">Todos los certificados</option>
+        </select>
+      </div>
+      <div id="loading" class="text-center">Cargando...</div>
+      <div class="overflow-x-auto mt-4">
+        <table class="min-w-full bg-white text-sm">
+          <thead class="bg-gray-200">
+            <tr>
+              <th class="px-3 py-2 text-left">Laboratorio</th>
+              <th class="px-3 py-2 text-left">País</th>
+              <th class="px-3 py-2 text-left">Tipo Producto</th>
+              <th class="px-3 py-2 text-left">Forma Farmacéutica</th>
+              <th class="px-3 py-2 text-left">Tipo Certificado</th>
+              <th class="px-3 py-2 text-left">Fecha Emisión</th>
+              <th class="px-3 py-2 text-left">Fecha Vencimiento</th>
+              <th class="px-3 py-2 text-left">Estado</th>
+              <th class="px-3 py-2 text-left">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div class="mt-4 flex justify-center" id="pagination">
+        <button id="prevPage" class="px-2">Anterior</button>
+        <span id="pageInfo" class="px-2"></span>
+        <button id="nextPage" class="px-2">Siguiente</button>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
