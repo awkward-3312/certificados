@@ -1,157 +1,77 @@
-// main.js
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Configuración Supabase
 const supabaseUrl = 'https://yzdjpwdoutjeuuvxmqmv.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6ZGpwd2RvdXRqZXV1dnhtcW12Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk1MTg2NTMsImV4cCI6MjA2NTA5NDY1M30.WgC0o1VLVCMTi2cKiGC6OIPHrwgjTA';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const tableContainer = document.getElementById('certificatesTable');
-const form = document.getElementById('certificateForm');
-const modal = document.getElementById('certificateModal');
-const addBtn = document.getElementById('addCertificateBtn');
-const cancelBtn = document.getElementById('cancelBtn');
 const searchInput = document.getElementById('searchInput');
-const tipoProductoFilter = document.getElementById('filterTipoProducto');
-const formaFilter = document.getElementById('filterForma');
-const tipoCertificadoFilter = document.getElementById('filterTipoCertificado');
+const statusFilter = document.getElementById('statusFilter');
+const tableBody = document.getElementById('certBody');
 
-// Mostrar/Ocultar modal
-addBtn.addEventListener('click', () => {
-  form.reset();
-  document.getElementById('certId').value = '';
-  modal.classList.remove('hidden');
-});
+let certificates = [];
 
-cancelBtn.addEventListener('click', () => {
-  modal.classList.add('hidden');
-});
-
-// Cargar certificados
-async function loadCertificates() {
+async function fetchCertificates() {
   const { data, error } = await supabase.from('dataBase').select('*');
-  if (error) return console.error('Error cargando certificados:', error.message);
-
-  renderTable(data);
-  populateFilters(data);
-}
-
-// Renderizar tabla
-function renderTable(data) {
-  const searchTerm = searchInput.value.toLowerCase();
-  const tipo = tipoProductoFilter.value;
-  const forma = formaFilter.value;
-  const cert = tipoCertificadoFilter.value;
-
-  const filtered = data.filter(item => {
-    return (
-      (!searchTerm || item.labName?.toLowerCase().includes(searchTerm)) &&
-      (!tipo || item.tipoProducto === tipo) &&
-      (!forma || item.forma === forma) &&
-      (!cert || item.tipoCertificado === cert)
-    );
-  });
-
-  if (filtered.length === 0) {
-    tableContainer.innerHTML = '<p class="empty">No hay certificados disponibles.</p>';
+  if (error) {
+    console.error('Error loading certificates:', error.message);
     return;
   }
-
-  const rows = filtered.map(item => `
-    <div class="card">
-      <h3>${item.labName}</h3>
-      <p><strong>Dirección:</strong> ${item.labAddress}</p>
-      <p><strong>Producto:</strong> ${item.tipoProducto}</p>
-      <p><strong>Forma:</strong> ${item.forma}</p>
-      <p><strong>Certificado:</strong> ${item.tipoCertificado}</p>
-      <p><strong>Emisión:</strong> ${item.fechaEmision}</p>
-      <p><strong>Vencimiento:</strong> ${item.fechaVencimiento}</p>
-      <div class="card-actions">
-        <button onclick='editCertificate(${JSON.stringify(item)})'><i class="fas fa-edit"></i></button>
-        <button onclick='deleteCertificate(${item.id})'><i class="fas fa-trash-alt"></i></button>
-      </div>
-    </div>
-  `).join('');
-
-  tableContainer.innerHTML = rows;
+  certificates = data || [];
+  renderTable();
 }
 
-// Llenar selects de filtros
-function populateFilters(data) {
-  const tipos = [...new Set(data.map(i => i.tipoProducto))];
-  const formas = [...new Set(data.map(i => i.forma))];
-  const certificados = [...new Set(data.map(i => i.tipoCertificado))];
-
-  fillSelect(tipoProductoFilter, tipos);
-  fillSelect(formaFilter, formas);
-  fillSelect(tipoCertificadoFilter, certificados);
+function getStatus(dateStr) {
+  const today = new Date();
+  const exp = new Date(dateStr);
+  const diff = (exp - today) / (1000 * 60 * 60 * 24);
+  if (isNaN(diff)) return 'unknown';
+  if (diff < 0) return 'expired';
+  if (diff <= 60) return 'expiring';
+  return 'valid';
 }
 
-function fillSelect(select, items) {
-  const current = select.value;
-  select.innerHTML = `<option value="">${select.getAttribute('aria-label').replace('Filtrar por ', '')}</option>`;
-  items.forEach(i => {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    select.appendChild(option);
+function renderTable() {
+  const term = searchInput.value.toLowerCase();
+  const status = statusFilter.value;
+
+  const filtered = certificates.filter(item => {
+    const matchesSearch =
+      !term ||
+      item.labName?.toLowerCase().includes(term) ||
+      item.tipoCertificado?.toLowerCase().includes(term);
+    const itemStatus = getStatus(item.fechaVencimiento);
+    const matchesStatus = !status || itemStatus === status;
+    return matchesSearch && matchesStatus;
   });
-  select.value = current;
+
+  tableBody.innerHTML = filtered.map(item => {
+    const state = getStatus(item.fechaVencimiento);
+    const color =
+      state === 'valid'
+        ? 'text-green-500'
+        : state === 'expiring'
+        ? 'text-yellow-500'
+        : 'text-red-500';
+    const pdf = item.pdfUrl || item.pdf_url || '';
+    const pdfCell = pdf
+      ? `<a href="${pdf}" target="_blank" class="text-blue-600 underline">PDF</a>`
+      : '';
+
+    return `
+      <tr>
+        <td class="px-3 py-2 text-center"><i class="fas fa-circle ${color}"></i></td>
+        <td class="px-3 py-2">${item.tipoCertificado || ''}</td>
+        <td class="px-3 py-2">${item.labName || ''}</td>
+        <td class="px-3 py-2">${item.tipoProducto || ''}</td>
+        <td class="px-3 py-2">${item.forma || ''}</td>
+        <td class="px-3 py-2">${item.fechaVencimiento || ''}</td>
+        <td class="px-3 py-2">${pdfCell}</td>
+      </tr>`;
+  }).join('');
 }
 
-// Guardar (insertar o actualizar)
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const certId = document.getElementById('certId').value;
-  const values = {
-    labName: form.labName.value,
-    labAddress: form.labAddress.value,
-    tipoProducto: form.tipoProducto.value,
-    forma: form.forma.value,
-    tipoCertificado: form.tipoCertificado.value,
-    fechaEmision: form.fechaEmision.value,
-    fechaVencimiento: form.fechaVencimiento.value,
-  };
+searchInput.addEventListener('input', renderTable);
+statusFilter.addEventListener('change', renderTable);
 
-  if (certId) {
-    const { error } = await supabase.from('dataBase').update(values).eq('id', certId);
-    if (error) return alert('Error actualizando: ' + error.message);
-  } else {
-    const { error } = await supabase.from('dataBase').insert([values]);
-    if (error) return alert('Error agregando: ' + error.message);
-  }
+fetchCertificates();
 
-  modal.classList.add('hidden');
-  loadCertificates();
-});
-
-// Editar
-window.editCertificate = (item) => {
-  document.getElementById('certId').value = item.id;
-  form.labName.value = item.labName || '';
-  form.labAddress.value = item.labAddress || '';
-  form.tipoProducto.value = item.tipoProducto || '';
-  form.forma.value = item.forma || '';
-  form.tipoCertificado.value = item.tipoCertificado || '';
-  form.fechaEmision.value = item.fechaEmision || '';
-  form.fechaVencimiento.value = item.fechaVencimiento || '';
-  modal.classList.remove('hidden');
-};
-
-// Eliminar
-window.deleteCertificate = async (id) => {
-  const confirmDelete = confirm('¿Eliminar este certificado?');
-  if (!confirmDelete) return;
-
-  const { error } = await supabase.from('dataBase').delete().eq('id', id);
-  if (error) return alert('Error eliminando: ' + error.message);
-  loadCertificates();
-};
-
-// Filtros en tiempo real
-[searchInput, tipoProductoFilter, formaFilter, tipoCertificadoFilter].forEach(el =>
-  el.addEventListener('input', loadCertificates)
-);
-
-// Iniciar
-loadCertificates();
