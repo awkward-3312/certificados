@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Administrativo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="src/supabaseClient.js"></script>
+  <script src="admin-dashboard.js" defer></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex bg-gray-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gradient-to-b from-[#0d1a80] to-[#1625a3] text-white rounded-r-3xl p-6 flex flex-col">
+    <div class="text-2xl font-bold mb-8">Certificados AR</div>
+    <div class="flex flex-col items-center mb-6">
+      <img id="profilePic" src="https://ui-avatars.com/api/?name=User" alt="profile" class="w-20 h-20 rounded-full mb-2">
+      <span id="userName" class="font-semibold">Usuario</span>
+    </div>
+    <nav class="flex flex-col gap-2 text-white">
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-table-columns"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-flask"></i><span>Laboratorio</span></a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-clock"></i><span>Por vencer</span></a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-certificate"></i><span>CLV</span></a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-file-alt"></i><span>CPP</span></a>
+      <a href="#" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-prescription-bottle-alt"></i><span>CBPM</span></a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 p-6 space-y-6">
+    <header>
+      <h1 class="text-xl text-gray-600">Hello <span id="headerName">User</span>, Welcome back</h1>
+      <h2 class="text-3xl font-bold text-gray-800">Your Dashboard is updated</h2>
+    </header>
+
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Chart Card -->
+      <div class="bg-white rounded-2xl shadow p-4 flex flex-col">
+        <h3 class="font-semibold mb-4">Estado de Certificados</h3>
+        <div class="relative h-60">
+          <canvas id="certChart" class="w-full h-full"></canvas>
+        </div>
+      </div>
+      <!-- Total Card -->
+      <div class="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center text-center">
+        <i class="fas fa-database text-4xl text-blue-600 mb-2"></i>
+        <h3 class="font-semibold">Total de Certificados</h3>
+        <p id="totalCert" class="text-4xl font-bold text-gray-700">0</p>
+      </div>
+      <!-- Weather Card -->
+      <div class="bg-gradient-to-br from-blue-100 to-white rounded-2xl shadow p-6 flex flex-col items-center justify-center text-center">
+        <h3 class="font-semibold mb-2">Clima actual</h3>
+        <div class="flex items-center gap-2 text-2xl font-bold mb-1">
+          <i id="weatherIcon" class="fas fa-sun"></i>
+          <span id="weatherTemp">--°C</span>
+        </div>
+        <p id="weatherLocation" class="text-sm text-gray-600">Tegucigalpa</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
