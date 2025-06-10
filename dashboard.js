@@ -17,6 +17,17 @@ const nextBtn = document.getElementById('nextPage');
 const pageInfo = document.getElementById('pageInfo');
 const logoutBtn = document.getElementById('logoutBtn');
 
+// Sidebar and tabs
+const sidebar = document.getElementById('sidebar');
+const openSidebarBtn = document.getElementById('openSidebar');
+const closeSidebarBtn = document.getElementById('closeSidebar');
+const dashboardTabEl = document.getElementById('tab-dashboard');
+const labsTabEl = document.getElementById('tab-labs');
+const vencerTabEl = document.getElementById('tab-vencer');
+const labList = document.getElementById('labList');
+const vencerBody = document.getElementById('vencerBody');
+const vencerLoading = document.getElementById('vencerLoading');
+
 searchInput.value = localStorage.getItem('search') || '';
 filterPais.value = localStorage.getItem('filterPais') || '';
 filterTipoProducto.value = localStorage.getItem('filterTipoProducto') || '';
@@ -126,7 +137,7 @@ function renderTable() {
   nextBtn.disabled = page === totalPages;
 }
 
-tableBody.addEventListener('click', (e) => {
+function handleTableClick(e) {
   if (e.target.dataset.action === 'ver') {
     window.open(e.target.dataset.url, '_blank', 'noopener,noreferrer');
   } else if (e.target.dataset.action === 'descargar') {
@@ -135,7 +146,12 @@ tableBody.addEventListener('click', (e) => {
     a.download = '';
     a.click();
   }
-});
+}
+
+tableBody.addEventListener('click', handleTableClick);
+if (vencerBody) {
+  vencerBody.addEventListener('click', handleTableClick);
+}
 
 prevBtn.addEventListener('click', () => { page--; renderTable(); });
 nextBtn.addEventListener('click', () => { page++; renderTable(); });
@@ -160,6 +176,60 @@ filterTipoCertificado.addEventListener('change', () => {
   page = 1;
   renderTable();
 });
+
+function renderLabs() {
+  const labs = [...new Set(certificados.map(c => c.laboratorio).filter(Boolean))].sort();
+  labList.innerHTML = labs.length
+    ? labs.map(l => `<li>${l}</li>`).join('')
+    : '<li>No hay laboratorios registrados</li>';
+}
+
+function renderVencer() {
+  vencerLoading.textContent = 'Cargando...';
+  const hoy = new Date();
+  const limite = new Date(hoy.getTime() + 90 * 24 * 60 * 60 * 1000);
+  const proximos = certificados
+    .filter(c => c.activo && c.fecha_vencimiento)
+    .filter(c => {
+      const v = new Date(c.fecha_vencimiento);
+      return v >= hoy && v <= limite;
+    })
+    .sort((a, b) => new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento));
+
+  vencerBody.innerHTML = proximos.length
+    ? proximos
+        .map(row => `
+      <tr class="hover:bg-blue-50">
+        <td class="px-3 py-2 break-words">${row.laboratorio || ''}</td>
+        <td class="px-3 py-2">${row.pais || ''}</td>
+        <td class="px-3 py-2 break-words">${row.tipo_certificado || ''}</td>
+        <td class="px-3 py-2">${formatDate(row.fecha_vencimiento)}</td>
+        <td class="px-3 py-2 space-x-2">
+          <button class="bg-blue-500 text-white px-2 py-1 rounded shadow hover:bg-blue-600 transition-colors text-xs" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
+          <button class="bg-green-500 text-white px-2 py-1 rounded shadow hover:bg-green-600 transition-colors text-xs" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
+        </td>
+      </tr>
+    `)
+        .join('')
+    : '<tr><td colspan="5" class="text-center py-4">No hay certificados próximos a vencer</td></tr>';
+  vencerLoading.textContent = '';
+}
+
+function showTab(tab) {
+  dashboardTabEl.classList.add('hidden');
+  labsTabEl.classList.add('hidden');
+  vencerTabEl.classList.add('hidden');
+
+  if (tab === 'dashboard') {
+    dashboardTabEl.classList.remove('hidden');
+  } else if (tab === 'labs') {
+    labsTabEl.classList.remove('hidden');
+    renderLabs();
+  } else if (tab === 'vencer') {
+    vencerTabEl.classList.remove('hidden');
+    renderVencer();
+  }
+}
 
 async function loadCertificados() {
   loadingDiv.textContent = 'Cargando...';
@@ -191,6 +261,25 @@ async function checkSession() {
 
 document.addEventListener('DOMContentLoaded', () => {
   checkSession();
+  showTab('dashboard');
+
+  if (openSidebarBtn) {
+    openSidebarBtn.addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
+  }
+
+  if (closeSidebarBtn) {
+    closeSidebarBtn.addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
+  }
+
+  document.querySelectorAll('.sidebar-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('bg-blue-600'));
+      link.classList.add('bg-blue-600');
+      showTab(link.dataset.tab);
+      if (window.innerWidth < 768) sidebar.classList.add('-translate-x-full');
+    });
+  });
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
