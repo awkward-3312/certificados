@@ -143,12 +143,12 @@ async function setupLogin() {
       return;
     }
     if (!isAuthorized(data.user.email)) {
-      alert('Access not authorized');
+      alert('Acceso no autorizado');
       await supa.auth.signOut();
       window.location.href = 'certificados-login.html';
       return;
     }
-    window.location.href = 'certificados.html';
+    window.location.href = 'index.html';
   });
 }
 
@@ -159,7 +159,7 @@ async function setupDashboard() {
     return;
   }
   if (!isAuthorized(session.user.email)) {
-    alert('Access not authorized');
+    alert('Acceso no autorizado');
     await supa.auth.signOut();
     window.location.href = 'certificados-login.html';
     return;
@@ -175,6 +175,13 @@ async function setupDashboard() {
   document.getElementById('filterTipoCertificado').addEventListener('change', applyFilters);
 
   loadCertificados();
+
+  document.querySelectorAll('aside nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      alert('Funci\u00f3n en desarrollo');
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -182,14 +189,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (path.includes('certificados-login.html')) {
     const session = await getSession();
     if (session && isAuthorized(session.user.email)) {
-      window.location.href = 'certificados.html';
+      window.location.href = 'index.html';
       return;
     }
     if (session && !isAuthorized(session.user.email)) {
       await supa.auth.signOut();
     }
     setupLogin();
-  } else if (path.includes('certificados.html')) {
+  } else {
     setupDashboard();
   }
 });
