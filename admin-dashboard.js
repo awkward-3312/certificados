@@ -37,6 +37,14 @@ function calcularEstados(certificados) {
   return { vigentes, porVencer, vencidos };
 }
 
+let certChart;
+
+function renderChart(estados) {
+  const ctx = document.getElementById('certChart');
+  if (certChart) {
+    certChart.destroy();
+  }
+  certChart = new Chart(ctx, {
 function renderChart(estados) {
   const ctx = document.getElementById('certChart');
   new Chart(ctx, {
