@@ -32,7 +32,7 @@ function formatDate(str) {
 function applyFilters() {
   const search = searchInput.value.toLowerCase();
   return certificados.filter(row => {
-    const texto = `${row.laboratorio || ''} ${row.pais || ''} ${row.tipo_producto || ''} ${row.tipo_formafarmaceutica || ''} ${row.tipo_certificado || ''}`.toLowerCase();
+    const texto = `${row.laboratorio || ''} ${row.pais || ''} ${row.tipo_producto || ''} ${row.tipo_forma || ''} ${row.tipo_certificado || ''}`.toLowerCase();
     const matchSearch = !search || texto.includes(search);
     const matchPais = !filterPais.value || row.pais === filterPais.value;
     const matchProd = !filterTipoProducto.value || row.tipo_producto === filterTipoProducto.value;
@@ -51,7 +51,6 @@ function renderOptions() {
   const certificadosTipos = [...new Set(certificados.map(r => r.tipo_certificado).filter(Boolean))];
   filterTipoCertificado.innerHTML = '<option value="">Todos los certificados</option>' +
     certificadosTipos.map(c => `<option value="${c}">${c}</option>`).join('');
-
   filterPais.value = localStorage.getItem('filterPais') || '';
   filterTipoProducto.value = localStorage.getItem('filterTipoProducto') || '';
   filterTipoCertificado.value = localStorage.getItem('filterTipoCertificado') || '';
@@ -162,12 +161,16 @@ async function loadCertificados() {
     .from('dataBase')
     .select('*')
     .order('fecha_emision', { ascending: false });
+
   loadingDiv.textContent = '';
-  if (!error) {
-    certificados = data || [];
-    renderOptions();
-    renderTable();
+  if (error) {
+    console.error('Error al cargar certificados:', error);
+    return;
   }
+
+  certificados = data || [];
+  renderOptions();
+  renderTable();
 }
 
 async function checkSession() {
