@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="min-h-screen bg-gray-100">
+  <div id="app">
   <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
     <h1 class="text-xl font-semibold">Repositorio de Certificados</h1>
     <button id="cerrar-sesion" class="bg-blue-800 px-3 py-1 rounded">Cerrar sesión</button>
@@ -23,10 +24,19 @@
     </aside>
     <main class="flex-1 p-4 overflow-x-auto">
       <div class="flex flex-wrap gap-4 mb-4">
-        <input id="searchInput" type="text" placeholder="Buscar..." class="border px-2 py-1 rounded w-full sm:w-auto" />
-        <select id="filterPais" class="border px-2 py-1 rounded"></select>
-        <select id="filterTipoProducto" class="border px-2 py-1 rounded"></select>
-        <select id="filterTipoCertificado" class="border px-2 py-1 rounded"></select>
+        <input v-model="search" type="text" placeholder="Buscar..." class="border px-2 py-1 rounded w-full sm:w-auto" />
+        <select v-model="filterPais" class="border px-2 py-1 rounded">
+          <option value="">Todos los países</option>
+          <option v-for="p in paises" :key="p" :value="p">{{ p }}</option>
+        </select>
+        <select v-model="filterTipoProducto" class="border px-2 py-1 rounded">
+          <option value="">Todos los productos</option>
+          <option v-for="p in productos" :key="p" :value="p">{{ p }}</option>
+        </select>
+        <select v-model="filterTipoCertificado" class="border px-2 py-1 rounded">
+          <option value="">Todos los certificados</option>
+          <option v-for="c in certificados" :key="c" :value="c">{{ c }}</option>
+        </select>
       </div>
       <div id="loader" class="text-center hidden">Cargando...</div>
       <div id="error" class="text-red-500"></div>
@@ -44,11 +54,26 @@
               <th class="px-3 py-2 text-left">PDF</th>
             </tr>
           </thead>
-          <tbody></tbody>
+          <tbody>
+            <tr v-for="row in filtrados" :key="row.id" :class="rowClass(row)">
+              <td>{{ row.laboratorio || '' }}</td>
+              <td>{{ row.pais || '' }}</td>
+              <td>{{ row.tipo_producto || '' }}</td>
+              <td>{{ row.forma_farmaceutica || '' }}</td>
+              <td>{{ row.tipo_certificado || '' }}</td>
+              <td>{{ row.fecha_emision ? formatDate(row.fecha_emision) : '' }}</td>
+              <td>{{ row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : '' }}</td>
+              <td><button class="btn-pdf" @click="verPdf(row.archivo_pdf)">Ver PDF</button></td>
+            </tr>
+            <tr v-if="filtrados.length === 0">
+              <td colspan="8" class="sin-datos">No hay certificados disponibles</td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </main>
   </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <script type="module" src="main.js"></script>
 </body>
 </html>
