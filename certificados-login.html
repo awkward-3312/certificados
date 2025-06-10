@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="src/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="src/supabaseClient.js"></script>
+  <script src="login.js" defer></script>
+</head>
+<body>
+  <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <form id="login-form" class="bg-white p-6 rounded shadow w-80">
+      <h1 class="text-lg mb-4 font-semibold">Iniciar Sesión</h1>
+      <input id="email" type="email" placeholder="Correo" class="border px-2 py-1 rounded w-full mb-3" />
+      <input id="password" type="password" placeholder="Contraseña" class="border px-2 py-1 rounded w-full mb-3" />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Ingresar</button>
+      <p id="error" class="text-red-600 mt-2"></p>
+      <p id="loader" class="mt-2 text-center hidden">Cargando...</p>
+    </form>
+  </div>
+</body>
+</html>
