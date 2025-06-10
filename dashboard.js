@@ -22,25 +22,6 @@ filterPais.value = localStorage.getItem('filterPais') || '';
 filterTipoProducto.value = localStorage.getItem('filterTipoProducto') || '';
 filterTipoCertificado.value = localStorage.getItem('filterTipoCertificado') || '';
 
-function rowClass(row) {
-  const hoy = new Date();
-  const limite = 30 * 24 * 60 * 60 * 1000;
-  const vto = row.fecha_vencimiento ? new Date(row.fecha_vencimiento) : null;
-  if (!vto) return '';
-  const diff = vto - hoy;
-  if (diff < 0) return 'expirado';
-  if (diff <= limite) return 'por-vencer';
-  return 'valido';
-}
-
-function stateIcon(row) {
-  const cls = rowClass(row);
-  if (cls === 'valido') return '🟢';
-  if (cls === 'por-vencer') return '🟡';
-  if (cls === 'expirado') return '🔴';
-  return '';
-}
-
 function formatDate(str) {
   const d = new Date(str);
   const day = String(d.getDate()).padStart(2, '0');
@@ -51,7 +32,7 @@ function formatDate(str) {
 function applyFilters() {
   const search = searchInput.value.toLowerCase();
   return certificados.filter(row => {
-    const texto = `${row.laboratorio || ''} ${row.pais || ''} ${row.tipo_producto || ''} ${row.forma_farmaceutica || ''} ${row.tipo_certificado || ''}`.toLowerCase();
+    const texto = `${row.laboratorio || ''} ${row.pais || ''} ${row.tipo_producto || ''} ${row.tipo_formafarmaceutica || ''} ${row.tipo_certificado || ''}`.toLowerCase();
     const matchSearch = !search || texto.includes(search);
     const matchPais = !filterPais.value || row.pais === filterPais.value;
     const matchProd = !filterTipoProducto.value || row.tipo_producto === filterTipoProducto.value;
@@ -70,6 +51,7 @@ function renderOptions() {
   const certificadosTipos = [...new Set(certificados.map(r => r.tipo_certificado).filter(Boolean))];
   filterTipoCertificado.innerHTML = '<option value="">Todos los certificados</option>' +
     certificadosTipos.map(c => `<option value="${c}">${c}</option>`).join('');
+
   filterPais.value = localStorage.getItem('filterPais') || '';
   filterTipoProducto.value = localStorage.getItem('filterTipoProducto') || '';
   filterTipoCertificado.value = localStorage.getItem('filterTipoCertificado') || '';
@@ -115,6 +97,7 @@ function renderTable() {
         <td>${row.direccion || ''}</td>
         <td>${row.pais || ''}</td>
         <td>${row.tipo_producto || ''}</td>
+        <td>${row.tipo_formafarmaceutica || ''}</td>
         <td>${row.tipo_forma || ''}</td>
         <td>${row.tipo_certificado || ''}</td>
         <td>${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
