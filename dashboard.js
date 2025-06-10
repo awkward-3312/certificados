@@ -80,24 +80,54 @@ function renderTable() {
   const totalPages = Math.ceil(filtrados.length / pageSize) || 1;
   if (page > totalPages) page = totalPages;
   const paginated = filtrados.slice((page - 1) * pageSize, page * pageSize);
-  tableBody.innerHTML = paginated.map(row => `
-    <tr class="${rowClass(row)}">
-      <td>${row.laboratorio || ''}</td>
-      <td>${row.direccion || ''}</td>
-      <td>${row.pais || ''}</td>
-      <td>${row.tipo_producto || ''}</td>
-      <td>${row.tipo_forma || ''}</td>
-      <td>${row.tipo_certificado || ''}</td>
-      <td>${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
-      <td>${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
-      <td>
-        <button class="text-blue-600 mr-2" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
-        <button class="text-green-600" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
-      </td>
-      <td class="text-lg">${row.activo ? '🟢 Activo' : '🔴 Inactivo'}</td>
-      <td>${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
-    </tr>
-  `).join('');
+
+  tableBody.innerHTML = paginated.map(row => {
+    const hoy = new Date();
+    const vto = row.fecha_vencimiento ? new Date(row.fecha_vencimiento) : null;
+    let estado = '';
+    let icono = '';
+
+    if (!row.activo) {
+      estado = 'Inactivo';
+      icono = '⚫️';
+    } else if (vto) {
+      const diff = vto - hoy;
+      const limite90 = 90 * 24 * 60 * 60 * 1000;
+
+      if (diff < 0) {
+        estado = 'Vencido';
+        icono = '🔴';
+      } else if (diff <= limite90) {
+        estado = 'Por vencer';
+        icono = '🟠';
+      } else {
+        estado = 'Vigente';
+        icono = '🟢';
+      }
+    } else {
+      estado = 'Desconocido';
+      icono = '❓';
+    }
+
+    return `
+      <tr>
+        <td>${row.laboratorio || ''}</td>
+        <td>${row.direccion || ''}</td>
+        <td>${row.pais || ''}</td>
+        <td>${row.tipo_producto || ''}</td>
+        <td>${row.tipo_forma || ''}</td>
+        <td>${row.tipo_certificado || ''}</td>
+        <td>${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
+        <td>${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
+        <td>
+          <button class="text-blue-600 mr-2" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
+          <button class="text-green-600" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
+        </td>
+        <td class="font-semibold">${icono} ${estado}</td>
+        <td>${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
+      </tr>
+    `;
+  }).join('');
 
   if (filtrados.length === 0) {
     tableBody.innerHTML = '<tr><td colspan="12" class="text-center py-4">No hay certificados disponibles</td></tr>';
