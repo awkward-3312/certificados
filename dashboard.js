@@ -83,22 +83,26 @@ function renderTable() {
   tableBody.innerHTML = paginated.map(row => `
     <tr class="${rowClass(row)}">
       <td>${row.laboratorio || ''}</td>
+      <td>${row.direccion || ''}</td>
       <td>${row.pais || ''}</td>
       <td>${row.tipo_producto || ''}</td>
-      <td>${row.forma_farmaceutica || ''}</td>
+      <td>${row.tipo_forma || ''}</td>
       <td>${row.tipo_certificado || ''}</td>
       <td>${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
       <td>${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
-      <td class="text-lg">${stateIcon(row)}</td>
       <td>
         <button class="text-blue-600 mr-2" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
         <button class="text-green-600" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
       </td>
+      <td class="text-lg">${row.activo ? '🟢 Activo' : '🔴 Inactivo'}</td>
+      <td>${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
     </tr>
   `).join('');
+
   if (filtrados.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4">No hay certificados disponibles</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="12" class="text-center py-4">No hay certificados disponibles</td></tr>';
   }
+
   pageInfo.textContent = `${page} / ${totalPages}`;
   prevBtn.disabled = page === 1;
   nextBtn.disabled = page === totalPages;
