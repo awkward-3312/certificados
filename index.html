@@ -1,49 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Regulatory Certificate Repository</title>
+  <title>Repositorio de Certificados</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://kit.fontawesome.com/a2d2fa03e2.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="min-h-screen bg-gray-100">
-  <header class="bg-blue-600 text-white p-4">
-    <h1 class="text-xl font-semibold">Regulatory Certificate Repository</h1>
+  <header class="bg-blue-600 text-white p-4 flex justify-between items-center">
+    <h1 class="text-xl font-semibold">Repositorio de Certificados</h1>
+    <button id="cerrar-sesion" class="bg-blue-800 px-3 py-1 rounded">Cerrar sesión</button>
   </header>
   <div class="flex min-h-screen">
     <aside class="bg-gray-800 text-white w-64 p-4 hidden lg:block">
       <nav class="space-y-2">
-        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Dashboard</a>
-        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Add Certificate</a>
-        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Labs</a>
-        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Settings</a>
+        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Panel</a>
+        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Agregar Certificado</a>
+        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Laboratorios</a>
+        <a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Configuraciones</a>
       </nav>
     </aside>
     <main class="flex-1 p-4 overflow-x-auto">
       <div class="flex flex-wrap gap-4 mb-4">
-        <input id="searchInput" type="text" placeholder="Search..." class="border px-2 py-1 rounded w-full sm:w-auto" />
-        <select id="statusFilter" class="border px-2 py-1 rounded">
-          <option value="">All Statuses</option>
-          <option value="valid">Valid</option>
-          <option value="expiring">Expiring Soon</option>
-          <option value="expired">Expired</option>
-        </select>
+        <input id="searchInput" type="text" placeholder="Buscar..." class="border px-2 py-1 rounded w-full sm:w-auto" />
+        <select id="filterPais" class="border px-2 py-1 rounded"></select>
+        <select id="filterTipoProducto" class="border px-2 py-1 rounded"></select>
+        <select id="filterTipoCertificado" class="border px-2 py-1 rounded"></select>
       </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full bg-white text-sm">
+      <div id="loader" class="text-center hidden">Cargando...</div>
+      <div id="error" class="text-red-500"></div>
+      <div class="overflow-x-auto mt-4">
+        <table id="tablaCertificados" class="min-w-full bg-white text-sm">
           <thead class="bg-gray-200">
             <tr>
-              <th class="px-3 py-2 text-left">Status</th>
-              <th class="px-3 py-2 text-left">Certificate Name</th>
-              <th class="px-3 py-2 text-left">Laboratory</th>
-              <th class="px-3 py-2 text-left">Product Type</th>
-              <th class="px-3 py-2 text-left">Pharmaceutical Form</th>
-              <th class="px-3 py-2 text-left">Expiration Date</th>
+              <th class="px-3 py-2 text-left">Laboratorio</th>
+              <th class="px-3 py-2 text-left">País</th>
+              <th class="px-3 py-2 text-left">Tipo Producto</th>
+              <th class="px-3 py-2 text-left">Forma Farmacéutica</th>
+              <th class="px-3 py-2 text-left">Tipo Certificado</th>
+              <th class="px-3 py-2 text-left">Fecha Emisión</th>
+              <th class="px-3 py-2 text-left">Fecha Vencimiento</th>
               <th class="px-3 py-2 text-left">PDF</th>
             </tr>
           </thead>
-          <tbody id="certBody"></tbody>
+          <tbody></tbody>
         </table>
       </div>
     </main>
