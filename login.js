@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return (window.ALLOWED_EMAILS || []).includes((email || '').toLowerCase());
   };
 
+  // Redirige al dashboard si ya hay sesión activa y autorizada
+  supa.auth.getSession().then(({ data }) => {
+    const session = data.session;
+    if (session && isAuthorized(session.user.email)) {
+      window.location.href = 'index.html';
+    }
+  });
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.textContent = '';
@@ -38,21 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!isAuthorized(data.user.email)) {
         await supa.auth.signOut();
-        errorEl.textContent = 'Acceso no autorizado.';
-        return;
-      }
-
-      window.location.href = 'index.html';
-    } catch (err) {
-      loaderEl.classList.add('hidden');
-      console.error(err);
-      errorEl.textContent = 'Ocurrió un error. Intenta nuevamente.';
-    }
-  });
-});
-
-      if (!isAuthorized(data.user.email)) {
-        await supabase.auth.signOut();
         errorEl.textContent = 'Acceso no autorizado.';
         return;
       }
