@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="src/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="src/supabaseClient.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="dashboard.js" defer></script>
 </head>
 <body class="h-screen flex overflow-hidden bg-gray-100">
@@ -27,6 +28,15 @@
       </a>
       <a href="#" data-tab="vencer" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
         <i class="fas fa-clock mr-3"></i><span>Por Vencer</span>
+      </a>
+      <a href="#" data-tab="clv" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
+        <i class="fas fa-certificate mr-3"></i><span>CLV</span>
+      </a>
+      <a href="#" data-tab="cpp" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
+        <i class="fas fa-file-alt mr-3"></i><span>CPP</span>
+      </a>
+      <a href="#" data-tab="cbpm" class="sidebar-link flex items-center px-4 py-2 rounded hover:bg-blue-600">
+        <i class="fas fa-prescription-bottle-alt mr-3"></i><span>CBPM</span>
       </a>
     </nav>
   </aside>
@@ -55,12 +65,13 @@
           <select id="filterTipoCertificado" aria-label="Filtrar por certificado" class="border px-2 py-1 rounded">
             <option value="">Todos los certificados</option>
           </select>
+          <button id="exportBtn" class="ml-auto bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition">Exportar Excel</button>
         </div>
 
         <div id="loading" class="text-center" aria-live="polite">Cargando...</div>
 
-        <div class="overflow-x-hidden mt-4">
-          <table class="table-fixed w-full divide-y divide-gray-200 text-sm">
+        <div class="overflow-x-auto mt-4">
+          <table class="table-auto w-full divide-y divide-gray-200 text-sm">
             <thead class="bg-gray-200 sticky top-0 text-gray-700">
               <tr>
                 <th class="px-3 py-2 w-32 font-semibold">Laboratorio</th>
@@ -88,16 +99,14 @@
         </div>
       </section>
 
-      <!-- Laboratorios Tab -->
       <section id="tab-labs" class="hidden">
         <ul id="labList" class="list-disc pl-5 space-y-2"></ul>
       </section>
 
-      <!-- Por Vencer Tab -->
       <section id="tab-vencer" class="hidden">
         <div id="vencerLoading" class="text-center" aria-live="polite"></div>
-        <div class="overflow-x-hidden mt-4">
-          <table class="table-fixed w-full divide-y divide-gray-200 text-sm">
+        <div class="overflow-x-auto mt-4">
+          <table class="table-auto w-full divide-y divide-gray-200 text-sm">
             <thead class="bg-gray-200 sticky top-0 text-gray-700">
               <tr>
                 <th class="px-3 py-2 w-32 font-semibold">Laboratorio</th>
@@ -111,6 +120,11 @@
           </table>
         </div>
       </section>
+
+      <section id="tab-clv" class="hidden"></section>
+      <section id="tab-cpp" class="hidden"></section>
+      <section id="tab-cbpm" class="hidden"></section>
+
     </main>
   </div>
 </body>
