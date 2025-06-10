@@ -62,51 +62,57 @@ function renderTable() {
   if (page > totalPages) page = totalPages;
   const paginated = filtrados.slice((page - 1) * pageSize, page * pageSize);
 
-  tableBody.innerHTML = paginated.map(row => {
+  tableBody.innerHTML = paginated.map((row, idx) => {
     const hoy = new Date();
     const vto = row.fecha_vencimiento ? new Date(row.fecha_vencimiento) : null;
     let estado = '';
     let icono = '';
+    let rowClass = '';
 
     if (!row.activo) {
       estado = 'Inactivo';
-      icono = '⚫️';
+      icono = '<i class="fa-solid fa-circle-minus text-gray-500 mr-1"></i>';
+      rowClass = idx % 2 === 0 ? 'bg-gray-100' : 'bg-gray-200';
     } else if (vto) {
       const diff = vto - hoy;
       const limite90 = 90 * 24 * 60 * 60 * 1000;
 
       if (diff < 0) {
         estado = 'Vencido';
-        icono = '🔴';
+        icono = '<i class="fa-solid fa-circle-xmark text-red-600 mr-1"></i>';
+        rowClass = idx % 2 === 0 ? 'bg-red-50' : 'bg-red-100';
       } else if (diff <= limite90) {
         estado = 'Por vencer';
-        icono = '🟠';
+        icono = '<i class="fa-solid fa-circle-exclamation text-yellow-600 mr-1"></i>';
+        rowClass = idx % 2 === 0 ? 'bg-yellow-50' : 'bg-yellow-100';
       } else {
         estado = 'Vigente';
-        icono = '🟢';
+        icono = '<i class="fa-solid fa-circle-check text-green-600 mr-1"></i>';
+        rowClass = idx % 2 === 0 ? 'bg-green-50' : 'bg-green-100';
       }
     } else {
       estado = 'Desconocido';
-      icono = '❓';
+      icono = '<i class="fa-solid fa-question text-gray-500 mr-1"></i>';
+      rowClass = idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
     }
 
     return `
-      <tr>
-        <td>${row.laboratorio || ''}</td>
-        <td>${row.direccion || ''}</td>
-        <td>${row.pais || ''}</td>
-        <td>${row.tipo_producto || ''}</td>
-        <td>${row.tipo_formafarmaceutica || ''}</td>
-        <td>${row.tipo_forma || ''}</td>
-        <td>${row.tipo_certificado || ''}</td>
-        <td>${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
-        <td>${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
-        <td>
-          <button class="text-blue-600 mr-2" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
-          <button class="text-green-600" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
+      <tr class="${rowClass} hover:bg-blue-50">
+        <td class="px-4 py-2 whitespace-nowrap">${row.laboratorio || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.direccion || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.pais || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_producto || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_formafarmaceutica || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_forma || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_certificado || ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap space-x-2">
+          <button class="bg-blue-500 text-white px-2 py-1 rounded shadow hover:bg-blue-600 transition-colors text-xs" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
+          <button class="bg-green-500 text-white px-2 py-1 rounded shadow hover:bg-green-600 transition-colors text-xs" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
         </td>
-        <td class="font-semibold">${icono} ${estado}</td>
-        <td>${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
+        <td class="px-4 py-2 whitespace-nowrap font-semibold">${icono} ${estado}</td>
+        <td class="px-4 py-2 whitespace-nowrap">${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
       </tr>
     `;
   }).join('');
