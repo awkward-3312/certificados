@@ -139,11 +139,6 @@ filterTipoCertificado.addEventListener('change', () => {
   renderTable();
 });
 
-logoutBtn.addEventListener('click', async () => {
-  await supa.auth.signOut();
-  window.location.href = 'certificados-login.html';
-});
-
 async function loadCertificados() {
   loadingDiv.textContent = 'Cargando...';
   const { data, error } = await supa
@@ -168,4 +163,18 @@ async function checkSession() {
   await loadCertificados();
 }
 
-document.addEventListener('DOMContentLoaded', checkSession);
+document.addEventListener('DOMContentLoaded', () => {
+  checkSession();
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await supa.auth.signOut();
+        window.location.href = 'certificados-login.html';
+      } catch (err) {
+        console.error('Error al cerrar sesión:', err);
+        alert('No se pudo cerrar sesión. Intenta nuevamente.');
+      }
+    });
+  }
+});
