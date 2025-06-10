@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Iniciar Sesión</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="src/styles.css">
@@ -10,16 +10,34 @@
   <script src="src/supabaseClient.js"></script>
   <script src="login.js" defer></script>
 </head>
-<body>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <form id="login-form" class="bg-white p-6 rounded shadow w-80">
-      <h1 class="text-lg mb-4 font-semibold">Iniciar Sesión</h1>
-      <input id="email" type="email" placeholder="Correo" class="border px-2 py-1 rounded w-full mb-3" />
-      <input id="password" type="password" placeholder="Contraseña" class="border px-2 py-1 rounded w-full mb-3" />
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Ingresar</button>
-      <p id="error" class="text-red-600 mt-2"></p>
-      <p id="loader" class="mt-2 text-center hidden">Cargando...</p>
-    </form>
+<body class="bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white shadow-2xl rounded-2xl flex flex-col md:flex-row overflow-hidden max-w-4xl w-full">
+    <!-- Imagen o ilustración -->
+    <div class="md:w-1/2 bg-cover bg-center" style="background-image: url('https://cdn.pixabay.com/photo/2018/03/01/14/59/technology-3190194_1280.jpg'); min-height: 300px;"></div>
+
+    <!-- Formulario -->
+    <div class="md:w-1/2 p-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Bienvenido</h2>
+      <p class="text-sm text-gray-600 mb-6 text-center">Ingresa tus credenciales para acceder</p>
+
+      <form id="login-form" class="space-y-4">
+        <input id="email" type="email" placeholder="Correo electrónico"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+
+        <input id="password" type="password" placeholder="Contraseña"
+               class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+          Ingresar
+        </button>
+
+        <p id="error" class="text-red-600 text-sm text-center"></p>
+        <p id="loader" class="text-blue-500 text-sm text-center hidden">Cargando...</p>
+      </form>
+    </div>
   </div>
+
 </body>
 </html>
