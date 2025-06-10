@@ -1,14 +1,3 @@
-const ALLOWED_EMAILS = [
-  'betza@certificate.com',
-  'ingrid@certificate.com',
-  'asly@certificate.com',
-  'karen@certificate.com'
-];
-
-function isAuthorized(email) {
-  return ALLOWED_EMAILS.includes((email || '').toLowerCase());
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
@@ -16,24 +5,55 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorEl = document.getElementById('error');
   const loaderEl = document.getElementById('loader');
 
+  const ALLOWED_EMAILS = [
+    'betza@certificate.com',
+    'ingrid@certificate.com',
+    'asly@certificate.com',
+    'karen@certificate.com'
+  ];
+
+  const isAuthorized = (email) => {
+    return ALLOWED_EMAILS.includes((email || '').toLowerCase());
+  };
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    loaderEl.classList.remove('hidden');
     errorEl.textContent = '';
-    const { data, error } = await supa.auth.signInWithPassword({
-      email: emailInput.value.trim(),
-      password: passwordInput.value
-    });
-    loaderEl.classList.add('hidden');
-    if (error || !data.session) {
-      errorEl.textContent = 'Credenciales inválidas.';
+    loaderEl.classList.remove('hidden');
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      loaderEl.classList.add('hidden');
+      errorEl.textContent = 'Por favor, completa todos los campos.';
       return;
     }
-    if (!isAuthorized(data.user.email)) {
-      await supa.auth.signOut();
-      errorEl.textContent = 'Acceso no autorizado';
-      return;
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      loaderEl.classList.add('hidden');
+
+      if (error || !data.session) {
+        errorEl.textContent = 'Credenciales inválidas.';
+        return;
+      }
+
+      if (!isAuthorized(data.user.email)) {
+        await supabase.auth.signOut();
+        errorEl.textContent = 'Acceso no autorizado.';
+        return;
+      }
+
+      window.location.href = 'index.html';
+    } catch (err) {
+      loaderEl.classList.add('hidden');
+      console.error(err);
+      errorEl.textContent = 'Ocurrió un error. Intenta nuevamente.';
     }
-    window.location.href = 'index.html';
   });
 });
