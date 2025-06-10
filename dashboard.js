@@ -98,21 +98,21 @@ function renderTable() {
 
     return `
       <tr class="${rowClass} hover:bg-blue-50">
-        <td class="px-4 py-2 whitespace-nowrap">${row.laboratorio || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.direccion || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.pais || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_producto || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_formafarmaceutica || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_forma || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.tipo_certificado || ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
-        <td class="px-4 py-2 whitespace-nowrap space-x-2">
+        <td class="px-3 py-2 break-words">${row.laboratorio || ''}</td>
+        <td class="px-3 py-2 break-words">${row.direccion || ''}</td>
+        <td class="px-3 py-2">${row.pais || ''}</td>
+        <td class="px-3 py-2 break-words">${row.tipo_producto || ''}</td>
+        <td class="px-3 py-2 break-words">${row.tipo_formafarmaceutica || ''}</td>
+        <td class="px-3 py-2 break-words">${row.tipo_forma || ''}</td>
+        <td class="px-3 py-2 break-words">${row.tipo_certificado || ''}</td>
+        <td class="px-3 py-2">${row.fecha_emision ? formatDate(row.fecha_emision) : ''}</td>
+        <td class="px-3 py-2">${row.fecha_vencimiento ? formatDate(row.fecha_vencimiento) : ''}</td>
+        <td class="px-3 py-2 space-x-2">
           <button class="bg-blue-500 text-white px-2 py-1 rounded shadow hover:bg-blue-600 transition-colors text-xs" data-action="ver" data-url="${row.archivo_pdf}">Ver</button>
           <button class="bg-green-500 text-white px-2 py-1 rounded shadow hover:bg-green-600 transition-colors text-xs" data-action="descargar" data-url="${row.archivo_pdf}">Descargar</button>
         </td>
-        <td class="px-4 py-2 whitespace-nowrap font-semibold">${icono} ${estado}</td>
-        <td class="px-4 py-2 whitespace-nowrap">${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
+        <td class="px-3 py-2 font-semibold">${icono} ${estado}</td>
+        <td class="px-3 py-2">${row.fecha_agregado ? formatDate(row.fecha_agregado) : ''}</td>
       </tr>
     `;
   }).join('');
