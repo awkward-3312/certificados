@@ -3,19 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Gestión de certificados regulatorios con Supabase">
+  <meta name="description" content="Plataforma de gestión de certificados regulatorios">
   <title>Certificados Regulatorios</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://kit.fontawesome.com/a2d2fa03e2.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <!-- Encabezado -->
   <header class="header">
-    <h1>Certificados Regulatorios</h1>
-    <button id="addCertificateBtn" aria-label="Agregar nuevo certificado"><i class="fas fa-plus"></i> Nuevo</button>
+    <div class="branding">
+      <i class="fas fa-file-medical-alt fa-lg"></i>
+      <h1>Certificados Regulatorios</h1>
+    </div>
+    <button id="addCertificateBtn" aria-label="Agregar nuevo certificado" class="btn-add">
+      <i class="fas fa-plus-circle"></i> Nuevo Certificado
+    </button>
   </header>
 
+  <!-- Contenido principal -->
   <main class="container">
-    <section class="filters">
+    <!-- Filtros -->
+    <section class="filters" aria-label="Filtros de búsqueda">
       <input type="text" id="searchInput" placeholder="🔍 Buscar por laboratorio..." aria-label="Buscar laboratorio" />
       <select id="filterTipoProducto" aria-label="Filtrar por tipo de producto">
         <option value="">Tipo de producto</option>
@@ -28,36 +36,53 @@
       </select>
     </section>
 
-    <section id="certificatesTable" aria-live="polite">
-      <!-- Tabla dinámica se carga desde main.js -->
+    <!-- Tabla / tarjetas de certificados -->
+    <section id="certificatesTable" class="certificates" aria-live="polite">
+      <!-- Las tarjetas se generan dinámicamente -->
     </section>
   </main>
 
-  <!-- Modal para agregar/editar certificado -->
+  <!-- Modal -->
   <div id="certificateModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
-      <h2 id="modalTitle">Agregar Certificado</h2>
+      <h2 id="modalTitle"><i class="fas fa-pen"></i> Agregar Certificado</h2>
       <form id="certificateForm">
         <input type="hidden" id="certId" />
-        <label>Laboratorio: <input type="text" id="labName" required /></label>
-        <label>Dirección: <input type="text" id="labAddress" required /></label>
-        <label>Tipo de Producto: <input type="text" id="tipoProducto" required /></label>
-        <label>Forma Farmacéutica: <input type="text" id="forma" required /></label>
-        <label>Tipo de Certificado: <input type="text" id="tipoCertificado" required /></label>
-        <label>Fecha de Emisión: <input type="date" id="fechaEmision" required /></label>
-        <label>Fecha de Vencimiento: <input type="date" id="fechaVencimiento" required /></label>
+        <label>Laboratorio:
+          <input type="text" id="labName" placeholder="Ej: Laboratorio Farma S.A." required />
+        </label>
+        <label>Dirección:
+          <input type="text" id="labAddress" placeholder="Ej: Tegucigalpa, Honduras" required />
+        </label>
+        <label>Tipo de Producto:
+          <input type="text" id="tipoProducto" placeholder="Ej: Medicamento" required />
+        </label>
+        <label>Forma Farmacéutica:
+          <input type="text" id="forma" placeholder="Ej: Tabletas" required />
+        </label>
+        <label>Tipo de Certificado:
+          <input type="text" id="tipoCertificado" placeholder="Ej: BPM, Libre Venta..." required />
+        </label>
+        <label>Fecha de Emisión:
+          <input type="date" id="fechaEmision" required />
+        </label>
+        <label>Fecha de Vencimiento:
+          <input type="date" id="fechaVencimiento" required />
+        </label>
         <div class="modal-actions">
-          <button type="submit" id="saveBtn">Guardar</button>
-          <button type="button" id="cancelBtn">Cancelar</button>
+          <button type="submit" id="saveBtn"><i class="fas fa-save"></i> Guardar</button>
+          <button type="button" id="cancelBtn"><i class="fas fa-times"></i> Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- Pie de página -->
   <footer class="footer">
-    <p>&copy; 2025 Gestión de Certificados · Plataforma desarrollada con ❤️ y Supabase</p>
+    <p> <strong>Certificados Regulatorios</strong> · Powered by Supabase</p>
   </footer>
 
+  <!-- Script principal -->
   <script type="module" src="main.js"></script>
 </body>
 </html>
