@@ -8,14 +8,16 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gray-100">
-  <form id="login-form" class="bg-white p-6 rounded shadow w-80">
-    <h1 class="text-lg mb-4 font-semibold">Iniciar Sesión</h1>
-    <input id="correo" type="email" placeholder="Correo" class="border px-2 py-1 rounded w-full mb-3" />
-    <input id="clave" type="password" placeholder="Contraseña" class="border px-2 py-1 rounded w-full mb-3" />
-    <button id="btn-ingresar" type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Ingresar</button>
-    <p id="error" class="text-red-600 mt-2"></p>
-    <p id="loader" class="mt-2 text-center hidden">Cargando...</p>
-  </form>
-  <script type="module" src="main.js"></script>
+  <div id="app">
+    <form @submit.prevent="submit" class="bg-white p-6 rounded shadow w-80">
+      <h1 class="text-lg mb-4 font-semibold">Iniciar Sesión</h1>
+      <input v-model="correo" type="email" placeholder="Correo" class="border px-2 py-1 rounded w-full mb-3" />
+      <input v-model="clave" type="password" placeholder="Contraseña" class="border px-2 py-1 rounded w-full mb-3" />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Ingresar</button>
+      <p class="text-red-600 mt-2">{{ error }}</p>
+      <p class="mt-2 text-center" v-if="loader">Cargando...</p>
+    </form>
+  </div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
