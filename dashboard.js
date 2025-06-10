@@ -1,12 +1,5 @@
-const ALLOWED_EMAILS = [
-  'betza@certificate.com',
-  'ingrid@certificate.com',
-  'asly@certificate.com',
-  'karen@certificate.com'
-];
-
 function isAuthorized(email) {
-  return ALLOWED_EMAILS.includes((email || '').toLowerCase());
+  return (window.ALLOWED_EMAILS || []).includes((email || '').toLowerCase());
 }
 
 let certificados = [];
@@ -113,7 +106,7 @@ function renderTable() {
 
 tableBody.addEventListener('click', (e) => {
   if (e.target.dataset.action === 'ver') {
-    window.open(e.target.dataset.url, '_blank');
+    window.open(e.target.dataset.url, '_blank', 'noopener,noreferrer');
   } else if (e.target.dataset.action === 'descargar') {
     const a = document.createElement('a');
     a.href = e.target.dataset.url;

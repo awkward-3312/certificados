@@ -243,3 +243,12 @@ body {
     padding: 1.2rem;
   }
 }
+.valido {
+  background-color: #e6ffed;
+}
+.por-vencer {
+  background-color: #fff5da;
+}
+.expirado {
+  background-color: #ffe5e5;
+}
