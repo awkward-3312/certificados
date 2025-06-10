@@ -1,3 +1,4 @@
+
 /* Estilos base */
 :root {
   --main-bg: #fdfdfd;
@@ -44,6 +45,7 @@ body {
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 .sidebar a {
   margin-bottom: 1rem;
@@ -82,6 +84,9 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
+th {
+  background: var(--primary);
+}
 th, td {
   border: 1px solid var(--border);
   padding: 0.5rem;
@@ -95,6 +100,42 @@ th, td {
 }
 .hidden {
   display: none;
+}
+.card-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.card-stats .card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  flex: 1 1 200px;
+}
+.card-stats .card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+.card-stats .card p {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.export-button {
+  background-color: var(--primary);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.export-button:hover {
+  background-color: var(--highlight);
 }
 @media (max-width: 768px) {
   .sidebar {
