@@ -45,6 +45,9 @@ function renderChart(estados) {
     certChart.destroy();
   }
   certChart = new Chart(ctx, {
+function renderChart(estados) {
+  const ctx = document.getElementById('certChart');
+  new Chart(ctx, {
     type: 'doughnut',
     data: {
       labels: ['Vencidos', 'Por vencer', 'Vigentes'],
