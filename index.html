@@ -18,18 +18,18 @@
     </header>
     <main class="p-4 overflow-x-auto">
       <div class="flex flex-wrap gap-4 mb-4">
-        <input id="search" type="text" placeholder="Buscar..." class="border px-2 py-1 rounded w-full sm:w-auto" />
-        <select id="filterPais" class="border px-2 py-1 rounded">
+        <input id="search" type="text" placeholder="Buscar..." aria-label="Buscar certificados" class="border px-2 py-1 rounded w-full sm:w-auto" />
+        <select id="filterPais" aria-label="Filtrar por país" class="border px-2 py-1 rounded">
           <option value="">Todos los países</option>
         </select>
-        <select id="filterTipoProducto" class="border px-2 py-1 rounded">
+        <select id="filterTipoProducto" aria-label="Filtrar por producto" class="border px-2 py-1 rounded">
           <option value="">Todos los productos</option>
         </select>
-        <select id="filterTipoCertificado" class="border px-2 py-1 rounded">
+        <select id="filterTipoCertificado" aria-label="Filtrar por certificado" class="border px-2 py-1 rounded">
           <option value="">Todos los certificados</option>
         </select>
       </div>
-      <div id="loading" class="text-center">Cargando...</div>
+      <div id="loading" class="text-center" aria-live="polite">Cargando...</div>
       <div class="overflow-x-auto mt-4">
         <table class="min-w-full bg-white text-sm">
           <thead class="bg-gray-200">

@@ -5,15 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorEl = document.getElementById('error');
   const loaderEl = document.getElementById('loader');
 
-  const ALLOWED_EMAILS = [
-    'betza@certificate.com',
-    'ingrid@certificate.com',
-    'asly@certificate.com',
-    'karen@certificate.com'
-  ];
-
   const isAuthorized = (email) => {
-    return ALLOWED_EMAILS.includes((email || '').toLowerCase());
+    return (window.ALLOWED_EMAILS || []).includes((email || '').toLowerCase());
   };
 
   form.addEventListener('submit', async (e) => {
