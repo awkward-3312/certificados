@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
+  "homepage": "https://awkward-3312.github.io/certificados",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
+    "gh-pages": "^6.3.0",
     "vite": "^6.3.5"
   }
 }
