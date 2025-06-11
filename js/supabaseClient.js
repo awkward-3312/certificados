@@ -7,6 +7,6 @@ window.ALLOWED_EMAILS = [
   'betza@platform.com',
   'ingrid@certificate.com',
   'asly@certificate.com',
-  'karen@certificate.com'
+  'karen@certificate.com',
   'jas@platform.com'
 ];
