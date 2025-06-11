@@ -15,8 +15,11 @@
   <script type="module" src="js/index.js"></script>
 </head>
 <body class="min-h-screen flex bg-gray-50">
+  <button id="sidebarToggle" class="md:hidden p-4 text-gray-700">
+    <i class="fas fa-bars"></i>
+  </button>
   <!-- Sidebar -->
-  <aside class="w-64 bg-gradient-to-b from-[#0d1a80] to-[#1625a3] text-white rounded-r-3xl p-6 flex flex-col">
+  <aside id="sidebar" class="sidebar hidden md:block w-64 bg-gradient-to-b from-[#0d1a80] to-[#1625a3] text-white rounded-r-3xl p-6 flex flex-col transition-transform">
     <div class="text-2xl font-bold mb-8">Certificados AR</div>
     <div class="flex flex-col items-center mb-6">
       <img id="profilePic" src="https://ui-avatars.com/api/?name=User" alt="profile" class="w-20 h-20 rounded-full mb-2" />
