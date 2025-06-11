@@ -132,6 +132,26 @@ function setupLogout() {
   });
 }
 
+function setupSidebarToggle() {
+  const btn = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  if (!btn || !sidebar) return;
+
+  btn.addEventListener('click', () => {
+    if (sidebar.classList.contains('hidden')) {
+      sidebar.classList.remove('hidden');
+      requestAnimationFrame(() => sidebar.classList.add('open'));
+    } else {
+      sidebar.classList.remove('open');
+      const hide = () => {
+        sidebar.classList.add('hidden');
+        sidebar.removeEventListener('transitionend', hide);
+      };
+      sidebar.addEventListener('transitionend', hide);
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await loadSession();
   if (!session) return;
@@ -143,6 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   setupSidebarNavigation();
   setupLogout();
+  setupSidebarToggle();
 
   // Cargar dashboard por defecto
   mostrarTab('dashboard');
