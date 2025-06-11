@@ -4,8 +4,9 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 window.supa = supabase.createClient(supabaseUrl, supabaseKey);
 
 window.ALLOWED_EMAILS = [
-  'betza@certificate.com',
+  'betza@platform.com',
   'ingrid@certificate.com',
   'asly@certificate.com',
   'karen@certificate.com'
+  'jas@platform.com'
 ];
