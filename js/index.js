@@ -1,3 +1,6 @@
+import { renderTablaCertificados } from './certificados.js';
+const supa = window.supa;
+
 function isAuthorized(email) {
   return (window.ALLOWED_EMAILS || []).includes((email || '').toLowerCase());
 }
@@ -15,7 +18,7 @@ async function loadSession() {
 async function loadCertificados() {
   const { data, error } = await supa
     .from('dataBase')
-    .select('fecha_vencimiento, laboratorio, pais, tipo_certificado, fecha_emision');
+    .select('*');
   if (error) {
     console.error(error);
     return [];
@@ -106,33 +109,13 @@ function setupSidebarNavigation() {
 
       if (tab === 'vencer') {
         const certificados = await loadCertificados();
-        const hoy = new Date();
-        const limite = new Date(hoy.getTime() + 90 * 24 * 60 * 60 * 1000);
-        const proximos = certificados
-          .filter(c => new Date(c.fecha_vencimiento) >= hoy && new Date(c.fecha_vencimiento) <= limite)
-          .sort((a, b) => new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento));
-        const tbody = document.getElementById('vencerBody');
-        tbody.innerHTML = '';
-        proximos.forEach(c => {
-          const div = document.createElement('div');
-          div.className = "py-1 border-b";
-          div.innerHTML = `<strong>${c.laboratorio}</strong> | ${c.pais} | ${c.tipo_certificado} | Vence: ${c.fecha_vencimiento}`;
-          tbody.appendChild(div);
-        });
+        renderTablaCertificados(certificados, 'vencerBody');
       }
 
       ['clv', 'cpp', 'cbpm'].forEach(tipo => {
         if (tab === tipo) {
           loadCertificados().then(certificados => {
-            const filtrados = certificados.filter(c => (c.tipo_certificado || '').toLowerCase() === tipo);
-            const contenedor = document.getElementById(`${tipo}Body`);
-            contenedor.innerHTML = '';
-            filtrados.forEach(c => {
-              const div = document.createElement('div');
-              div.className = "py-1 border-b";
-              div.innerHTML = `<strong>${c.laboratorio}</strong> | ${c.pais} | ${c.tipo_certificado} | Vence: ${c.fecha_vencimiento}`;
-              contenedor.appendChild(div);
-            });
+            renderTablaCertificados(certificados, `${tipo}Body`);
           });
         }
       });
