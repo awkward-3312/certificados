@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   supa.auth.getSession().then(({ data }) => {
     const session = data.session;
     if (session && isAuthorized(session.user.email)) {
-      window.location.href = 'inicio.html';
+      window.location.href = 'index.html';
     }
   });
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      window.location.href = 'inicio.html';
+      window.location.href = 'index.html';
     } catch (err) {
       loaderEl.classList.add('hidden');
       console.error(err);
