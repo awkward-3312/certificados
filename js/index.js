@@ -63,13 +63,25 @@ function renderChart(estados) {
 }
 
 async function loadWeather() {
-  try {
-    const resp = await fetch('https://api.open-meteo.com/v1/forecast?latitude=14.07&longitude=-87.21&current_weather=true');
-    const data = await resp.json();
-    const temp = data.current_weather?.temperature;
-    document.getElementById('weatherTemp').textContent = `${Math.round(temp)}°C`;
-  } catch (e) {
-    console.error('Weather error', e);
+  const locations = [
+    { id: 'weatherTempSPS', lat: 15.5, lon: -88.033 },
+    { id: 'weatherTempCholoma', lat: 15.6144, lon: -87.953 } // Choloma
+  ];
+
+  for (const loc of locations) {
+    try {
+      const resp = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}&current_weather=true`
+      );
+      const data = await resp.json();
+      const temp = data.current_weather?.temperature;
+      const el = document.getElementById(loc.id);
+      if (el && typeof temp === 'number') {
+        el.textContent = `${Math.round(temp)}°C`;
+      }
+    } catch (e) {
+      console.error('Weather error', loc.id, e);
+    }
   }
 }
 

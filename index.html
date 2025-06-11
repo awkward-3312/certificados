@@ -65,11 +65,18 @@
         <!-- Weather Card -->
         <div class="bg-gradient-to-br from-blue-100 to-white rounded-2xl shadow p-6 flex flex-col items-center justify-center text-center">
           <h3 class="font-semibold mb-2">Clima actual</h3>
-          <div class="flex items-center gap-2 text-2xl font-bold mb-1">
-            <i id="weatherIcon" class="fas fa-sun"></i>
-            <span id="weatherTemp">--°C</span>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-2xl font-bold">
+              <i class="fas fa-sun"></i>
+              <span id="weatherTempSPS">--°C</span>
+            </div>
+            <p class="text-sm text-gray-600">San Pedro Sula</p>
+            <div class="flex items-center gap-2 text-2xl font-bold">
+              <i class="fas fa-sun"></i>
+              <span id="weatherTempCholoma">--°C</span>
+            </div>
+            <p class="text-sm text-gray-600">Choloma</p>
           </div>
-          <p id="weatherLocation" class="text-sm text-gray-600">Tegucigalpa</p>
         </div>
       </div>
     </section>
