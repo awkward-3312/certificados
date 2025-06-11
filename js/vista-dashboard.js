@@ -1,5 +1,3 @@
-// dashboard.js actualizado con todas las mejoras
-
 function isAuthorized(email) {
   return (window.ALLOWED_EMAILS || []).includes((email || '').toLowerCase());
 }
