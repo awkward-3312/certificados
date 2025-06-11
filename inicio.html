@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio | Certificados AR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/inicio.js" defer></script>
+  <style>
+    body { font-family: 'Poppins', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex bg-gray-50">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gradient-to-b from-[#0d1a80] to-[#1625a3] text-white rounded-r-3xl p-6 flex flex-col">
+    <div class="text-2xl font-bold mb-8">Certificados AR</div>
+    <div class="flex flex-col items-center mb-6">
+      <img id="profilePic" src="https://ui-avatars.com/api/?name=User" alt="profile" class="w-20 h-20 rounded-full mb-2" />
+      <span id="userName" class="font-semibold">Usuario</span>
+    </div>
+    <nav class="flex flex-col gap-2 text-white">
+      <a href="#" data-tab="dashboard" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-table-columns"></i><span>Dashboard</span></a>
+      <a href="#" data-tab="labs" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-flask"></i><span>Laboratorio</span></a>
+      <a href="#" data-tab="vencer" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-clock"></i><span>Por vencer</span></a>
+      <a href="#" data-tab="clv" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-certificate"></i><span>CLV</span></a>
+      <a href="#" data-tab="cpp" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-file-alt"></i><span>CPP</span></a>
+      <a href="#" data-tab="cbpm" class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-700 border-l-4 border-transparent hover:border-white"><i class="fas fa-prescription-bottle-alt"></i><span>CBPM</span></a>
+    </nav>
+    <button id="logoutBtn" class="mt-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded mt-6">Cerrar sesión</button>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 p-6 space-y-6 overflow-y-auto">
+    <!-- Header -->
+    <header>
+      <h1 class="text-xl text-gray-600">Hola <span id="headerName">Usuario</span>, bienvenido de nuevo</h1>
+      <h2 class="text-3xl font-bold text-gray-800">Tu panel está actualizado</h2>
+    </header>
+
+    <!-- Sección: Dashboard -->
+    <section id="tab-dashboard" class="tab-section">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Chart Card -->
+        <div class="bg-white rounded-2xl shadow p-4 flex flex-col">
+          <h3 class="font-semibold mb-4">Estado de Certificados</h3>
+          <div class="relative h-60">
+            <canvas id="certChart" class="w-full h-full"></canvas>
+          </div>
+        </div>
+
+        <!-- Total Card -->
+        <div class="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center text-center">
+          <i class="fas fa-database text-4xl text-blue-600 mb-2"></i>
+          <h3 class="font-semibold">Total de Certificados</h3>
+          <p id="totalCert" class="text-4xl font-bold text-gray-700">0</p>
+        </div>
+
+        <!-- Weather Card -->
+        <div class="bg-gradient-to-br from-blue-100 to-white rounded-2xl shadow p-6 flex flex-col items-center justify-center text-center">
+          <h3 class="font-semibold mb-2">Clima actual</h3>
+          <div class="flex items-center gap-2 text-2xl font-bold mb-1">
+            <i id="weatherIcon" class="fas fa-sun"></i>
+            <span id="weatherTemp">--°C</span>
+          </div>
+          <p id="weatherLocation" class="text-sm text-gray-600">Tegucigalpa</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: Laboratorio -->
+    <section id="tab-labs" class="tab-section hidden">
+      <h2 class="text-xl font-semibold mb-4">Laboratorios</h2>
+      <ul id="labList" class="list-disc pl-6 space-y-1 text-sm"></ul>
+    </section>
+
+    <!-- Sección: Por vencer -->
+    <section id="tab-vencer" class="tab-section hidden">
+      <h2 class="text-xl font-semibold mb-4">Certificados por Vencer</h2>
+      <div id="vencerBody" class="overflow-auto border rounded p-4 text-sm"></div>
+    </section>
+
+    <!-- Secciones: CLV, CPP, CBPM -->
+    <section id="tab-clv" class="tab-section hidden">
+      <h2 class="text-xl font-semibold mb-4">Certificados CLV</h2>
+      <div id="clvBody" class="overflow-auto border rounded p-4 text-sm"></div>
+    </section>
+
+    <section id="tab-cpp" class="tab-section hidden">
+      <h2 class="text-xl font-semibold mb-4">Certificados CPP</h2>
+      <div id="cppBody" class="overflow-auto border rounded p-4 text-sm"></div>
+    </section>
+
+    <section id="tab-cbpm" class="tab-section hidden">
+      <h2 class="text-xl font-semibold mb-4">Certificados CBPM</h2>
+      <div id="cbpmBody" class="overflow-auto border rounded p-4 text-sm"></div>
+    </section>
+  </main>
+</body>
+</html>
