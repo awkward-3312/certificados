@@ -76,4 +76,4 @@ export function renderPorVencer(certificados, containerId = 'vencerBody') {
     const month = String(d.getMonth() + 1).padStart(2, '0');
     return `${day}/${month}/${d.getFullYear()}`;
   }
-  
+
