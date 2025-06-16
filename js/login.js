@@ -2,12 +2,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+  const themeToggle = document.getElementById('themeToggle');
   const errorEl = document.getElementById('error');
   const loaderEl = document.getElementById('loader');
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
+    const icon = themeToggle?.querySelector('i');
+    if (icon) {
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+    }
+  }
 
   const isAuthorized = (email) => {
     return (window.ALLOWED_EMAILS || []).includes((email || '').toLowerCase());
   };
+
+  if (togglePassword) {
+    togglePassword.addEventListener('click', () => {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      const icon = togglePassword.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+      }
+    });
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const icon = themeToggle.querySelector('i');
+      if (icon) {
+        icon.classList.toggle('fa-moon');
+        icon.classList.toggle('fa-sun');
+      }
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+  }
 
   // Redirige al dashboard si ya hay sesión activa y autorizada
   supa.auth.getSession().then(({ data }) => {

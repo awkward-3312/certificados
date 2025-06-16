@@ -6,8 +6,8 @@
   <title>Inicio | Certificados AR</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/index.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/index.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="js/supabaseClient.js"></script>
@@ -39,9 +39,12 @@
   <!-- Main content -->
   <main class="flex-1 p-6 space-y-6 overflow-y-auto">
     <!-- Header -->
-    <header>
-      <h1 class="text-xl text-gray-600">Hola <span id="headerName">Usuario</span>, bienvenido de nuevo</h1>
-      <h2 class="text-3xl font-bold text-gray-800">Tu panel está actualizado</h2>
+    <header class="flex items-center gap-4">
+      <div>
+        <h1 class="text-xl text-gray-600">Hola <span id="headerName">Usuario</span>, bienvenido de nuevo</h1>
+        <h2 class="text-3xl font-bold text-gray-800">Tu panel está actualizado</h2>
+      </div>
+      <button id="themeToggle" class="ml-auto text-gray-600"><i class="fas fa-moon"></i></button>
     </header>
 
     <!-- Sección: Dashboard -->
