@@ -11,9 +11,21 @@
   --shadow: rgba(0, 0, 0, 0.05);
 }
 
+body.dark {
+  --main-bg: #1a1a1a;
+  --primary: #6366f1;
+  --secondary: #4b5563;
+  --accent: #374151;
+  --text: #f9fafb;
+  --card-bg: #1f2937;
+  --border: #4b5563;
+  --highlight: #8b5cf6;
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
 * {
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -252,4 +264,12 @@ tbody tr:hover {
     cursor: pointer;
     align-self: flex-end;
   }
+
+}
+
+#themeToggle {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--text);
 }

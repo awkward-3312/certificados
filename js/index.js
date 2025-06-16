@@ -164,6 +164,25 @@ function setupSidebarToggle() {
   });
 }
 
+function setupThemeToggle() {
+  const btn = document.getElementById('themeToggle');
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    btn?.querySelector('i')?.classList.replace('fa-moon', 'fa-sun');
+  }
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    const icon = btn.querySelector('i');
+    if (icon) {
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    }
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const session = await loadSession();
   if (!session) return;
@@ -176,6 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupSidebarNavigation();
   setupLogout();
   setupSidebarToggle();
+  setupThemeToggle();
 
   // Cargar dashboard por defecto
   mostrarTab('dashboard');
