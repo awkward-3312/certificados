@@ -85,6 +85,24 @@ async function loadWeather() {
   }
 }
 
+function verificarVencimientos(certificados) {
+  const hoy = new Date();
+  const limite = new Date(hoy.getTime() + 90 * 24 * 60 * 60 * 1000);
+  const proximos = certificados.filter(c => {
+    if (!c.fecha_vencimiento) return false;
+    const fecha = new Date(c.fecha_vencimiento);
+    return fecha >= hoy && fecha <= limite;
+  }).length;
+  if (proximos > 0) {
+    const mensaje = `\u26A0\uFE0F Atención: Hay ${proximos} certificado(s) próximos a vencer en los próximos 3 meses.`;
+    if (window.Swal) {
+      Swal.fire({ icon: 'warning', text: mensaje });
+    } else {
+      alert(mensaje);
+    }
+  }
+}
+
 function mostrarTab(tabId) {
   document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
   const target = document.getElementById(`tab-${tabId}`);
@@ -204,4 +222,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderChart(estados);
   document.getElementById('totalCert').textContent = certificados.length;
   loadWeather();
+  verificarVencimientos(certificados);
 });
